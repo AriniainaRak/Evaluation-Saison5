@@ -1,0 +1,169 @@
+table 4:
+_panneau:
+capacite_max(1)
+taux de puissance(1->many)
+tarif(1)
+
+_groupe
+capacite_max
+capacite_reservoir
+consommation_prix
+cout
+
+_jirama
+cout
+puissance_max_W
+
+_consommation:
+nb_pers
+puissance_moy(75 W)
+consommation_fix
+taux_pers_h_creuse(%)
+
+
+_vue (date)
+
+___________________________________________
+BDD
+___________________________________________
+
+
+_type_data:
+id => 1
+code => JIR2
+libelle => prix wh
+
+_table_data:
+id => 1
+type(type_data) => 1
+valeur => 6000
+
+_consommation:
+nb_pers
+puissance_moy(75 W)
+consommation_fix
+taux_pers_h_creuse(%)
+
+___________________________________________
+Metier
+___________________________________________
+
+Test
+___________________________________________
+trie: type
+_production : GRP1,GRP2,GRP3,SOL1,SOL2,SOL3,SOL4,JIR1
+_consommation :
+nb_pers
+puissance_moy(75 W)
+consommation_fix
+taux_pers_h_creuse(%)
+
+_groupement production:
+__GRP :
+GRP1 : 5000W
+GRP2 : 50L
+GRP3 : 20L/h
+((GRP2)/GRP3) : ex (50/20/h) = 2,5h
+
+__SOL:
+SOL1 : 2000W
+SOL2 : 60%
+SOL3 : 90%
+SOL4 : 50%
+
+8->11h : 2000W*60% = 1100W : 3h
+11->14h : 2000W*90% = 1900W : 3h
+14->17 : 2000W*50% = 1000W : 3h
+
+_JIR :
+JIR1: 4000W
+
+___________________________________________
+ret[i] = tranche[0]+(1*capacite_max)+jirama; durree-1
+8 : 1100W +  5000W + 4000W (100% pers) => durree = 1.5
+9 : 1100W + 5000W + 4000W (100% pers) => durree = 0.5
+10 : 1100W + 2500W + 4000W (100% pers) => durree = -0.5
+11 : 1100W + 0 + 4000W (100% pers)
+
+12 : 1900W + 0 + 4000W (variable)
+13 : 1900W + 0 + 4000W (variable)
+14 : 1900W + 0 + 4000W (variable)
+
+15 : 1000W + 0 + 4000W (100% pers)
+16 : 1000W + 0 + 4000W (100% pers)
+17 : 1000W + 0 + 4000W (100% pers)
+
+
+___________________________________________
+Conso :
+(((nb_pers*taux_presence)/100) * conso_moy) + consommation_fix
+
+
+___________________________________________
+comment :
+3 partie:
+
+partie0:
+select * from _table_data
+
+partie 01 :
+collecte :
+a-durrée groupe: (GRP2)/GRP3) => durree : double
+GRP(1-2-3)
+
+b-puissance_panneau_par_tranche: (SOL1/SOL(2-3-4)) => tranche:double[]
+SOL(1->4)
+
+c-jirama : jirama => double
+JIR1
+
+partie 2:
+assemblage:
+
+function getProduction(){
+    Double[] ret = new Double[10] 8->17
+    reste_durree = 1;
+    for(int i=0;i<11;i++){
+        if(i<4){
+            ret[i]=tranche[0] + (reste_durree*GRP1) + jirama;
+            durree --;
+        }else if(i<6){
+            ret[i]=tranche[1] + (reste_durree*GRP1) + jirama;
+            durree --;
+        }else{
+            ret[i]=tranche[2] + (reste_durree*GRP1) + jirama;
+            durree --;
+        }
+
+        if(durree <1){
+            reste_durree = durree;
+            durree = 0;
+        }
+    }
+    return ret;
+}
+
+function getConsommation(){
+    Double ret = new Double[10];
+    double taux_eleve = 100;
+    for(int i=0;i<11;i++){
+        if(i>3 && i<6){
+            taux = taux_pers_h_creuse
+        }else{
+            taux = 100;
+        }
+        if(taux_eleve > 0){
+            ret[i] = (((nb_pers*taux_eleve)/100)*conso_moy) + consommation_fix;
+        }else{
+            ret[i] = consommation_fix;
+        }
+    }
+    return ret;
+}
+
+
+function getTableauRecap(){
+    for(int i=0;i<11;i++){
+        ret[i] = {heure, production,consommation}
+    }
+}
