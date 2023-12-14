@@ -296,4 +296,38 @@ class MyController extends Controller
         ];
         return view('pages.conso', compact('data'));
     }
+    public function getProductionDelestage(Request $request)
+    {
+        $heure = [8, 9, 10, 11, 12, 13, 14, 15, 16, 17];
+        $taux = 100;
+        $id = $request['id'];
+        $conso = Consommations::where('id', '=', $id)->first();
+        $delestage = Delestage::all();
+        $taux_creuse = (float)$conso->taux_pers_h_creuse;
+        $nbPers = (float)$conso->nb_pers;
+        $consoFix = (float)$conso->consommation_fix;
+        $puissMoy = (float)$conso->puissance_moy;
+        $tauxEleve = $taux;
+        $Consommation = [];
+        $ConsommationFix = 0;
+        $ConsommationEleve = 0;
+        for ($i = 0; $i < count($heure); $i++) {
+            if (Delestage[$i]->heure == heure[$i]) {
+                $i + 1;
+            }
+            if ($heure[$i] > 11 && $heure[$i] < 15) {
+                $tauxEleve = $taux_creuse;
+                $Consommation[$i] = ((($nbPers * $tauxEleve) / 100) * $puissMoy) + $consoFix;
+            } else {
+                $tauxEleve = $taux;
+                $Consommation[$i] = ((($nbPers * $tauxEleve) / 100) * $puissMoy) + $consoFix;
+            }
+        }
+        $data = [
+            'conso' => $Consommation,
+            'heure' => $heure,
+            'prod' => $this->getProduction()
+        ];
+        return view('pages.conso', compact('data'));
+    }
 }
