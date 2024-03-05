@@ -56,7 +56,7 @@
             <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
                 <div class="app-brand demo">
                     <a href="admis" class="app-brand-link">
-                        <span class="app-brand-text demo menu-text fw-bolder ms-2">ITU</span>
+                        <span class="app-brand-text demo menu-text fw-bolder ms-2">Tournoi</span>
                     </a>
 
                     <a href="javascript:void(0);"
@@ -69,36 +69,55 @@
 
                 <ul class="menu-inner py-1">
                     <!-- Dashboard -->
-                    <li class="menu-item @yield('typedata')">
-                        <a href="/typedata" class="menu-link">
+                    <li class="menu-item @yield('nationalite')">
+                        <a href="/nationalite" class="menu-link">
                             <i class="menu-icon tf-icons bx bx-home-circle"></i>
-                            <div data-i18n="Analytics">Type</div>
+                            <div data-i18n="Analytics">Nationalité</div>
                         </a>
                     </li>
-                    <li class="menu-item @yield('data')">
-                        <a href="/data" class="menu-link">
+                    <li class="menu-item @yield('club')">
+                        <a href="/club" class="menu-link">
                             <i class="menu-icon tf-icons bx bx-home-circle"></i>
-                            <div data-i18n="Analytics">Data</div>
+                            <div data-i18n="Analytics">Club</div>
                         </a>
                     </li>
-                    <li class="menu-item @yield('consommation')">
-                        <a href="/consommation" class="menu-link">
+                    <li class="menu-item @yield('joueur')">
+                        <a href="/joueur" class="menu-link">
                             <i class="menu-icon tf-icons bx bx-home-circle"></i>
-                            <div data-i18n="Analytics">Consommation</div>
+                            <div data-i18n="Analytics">Joueur</div>
                         </a>
                     </li>
-                    <li class="menu-item @yield('production')">
-                        <a href="/production" class="menu-link">
+                    <li class="menu-item @yield('caracteristique')">
+                        <a href="/caracteristique" class="menu-link">
                             <i class="menu-icon tf-icons bx bx-home-circle"></i>
-                            <div data-i18n="Analytics">production</div>
+                            <div data-i18n="Analytics">Caractéristique</div>
                         </a>
                     </li>
-                    <li class="menu-item @yield('consommation')">
-                        <a href="/conso?id=2" class="menu-link">
+                    <li class="menu-item @yield('formation')">
+                        <a href="/formation" class="menu-link">
                             <i class="menu-icon tf-icons bx bx-home-circle"></i>
-                            <div data-i18n="Analytics">Conso</div>
+                            <div data-i18n="Analytics">Formation</div>
                         </a>
                     </li>
+                    <li class="menu-item @yield('poste')">
+                        <a href="/poste" class="menu-link">
+                            <i class="menu-icon tf-icons bx bx-home-circle"></i>
+                            <div data-i18n="Analytics">Poste</div>
+                        </a>
+                    </li>
+                    <li class="menu-item @yield('coefficient')">
+                        <a href="/coefficient" class="menu-link">
+                            <i class="menu-icon tf-icons bx bx-home-circle"></i>
+                            <div data-i18n="Analytics">Coefficient</div>
+                        </a>
+                    </li>
+                    <li class="menu-item @yield('note_joueur')">
+                        <a href="/note_joueur" class="menu-link">
+                            <i class="menu-icon tf-icons bx bx-home-circle"></i>
+                            <div data-i18n="Analytics">Note Joueur</div>
+                        </a>
+                    </li>
+
                 </ul>
             </aside>
             <!-- / Menu -->

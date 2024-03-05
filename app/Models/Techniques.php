@@ -5,11 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Admins extends Model
+class Techniques extends Model
 {
     use HasFactory;
     protected $primaryKey = 'id';
-    protected $table = 'admins';
+    protected $table = 'techniques';
     public $timestamps = false;
     public $fillable =[
         'username',

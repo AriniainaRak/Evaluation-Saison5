@@ -5,15 +5,17 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Utilisateurs extends Model
+class Formations extends Model
 {
     use HasFactory;
-    protected $primaryKey = 'idutilisateur';
-    protected $table = 'utilisateur';
+    protected $primaryKey = 'id';
+    protected $table = 'formations';
     public $timestamps = false;
     public $fillable =[
-        'username',
-        'pwd'
+        'nom',
+        'attaquant',
+        'milieu',
+        'defense'
     ];
 
 }

@@ -107,11 +107,6 @@
 
     <!-- / Content -->
 
-    <div class="buy-now">
-        <a href="/users" class="btn btn-danger btn-buy-now">User</a>
-
-    </div>
-
     <!-- Core JS -->
     <!-- build:js assets/vendor/js/core.js -->
     <script src="{{ asset('admin/assets/vendor/libs/jquery/jquery.js') }}"></script>

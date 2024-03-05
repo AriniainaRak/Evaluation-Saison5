@@ -8,7 +8,7 @@
     <meta name="viewport"
         content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
 
-    <title>Gestionnaire</title>
+    <title>Technique</title>
 
     <meta name="description" content="" />
 
@@ -56,7 +56,7 @@
             <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
                 <div class="app-brand demo">
                     <a href="admis" class="app-brand-link">
-                        <span class="app-brand-text demo menu-text fw-bolder ms-2">JIOI</span>
+                        <span class="app-brand-text demo menu-text fw-bolder ms-2">Tournoi</span>
                     </a>
 
                     <a href="javascript:void(0);"
@@ -69,40 +69,17 @@
 
                 <ul class="menu-inner py-1">
                     <!-- Dashboard -->
-                    <li class="menu-item @yield('depense')">
-                        <a href="/mouvement" class="menu-link">
+                    <li class="menu-item @yield('liste')">
+                        <a href="/liste" class="menu-link">
                             <i class="menu-icon tf-icons bx bx-home-circle"></i>
-                            <div data-i18n="Analytics">Mouvement</div>
+                            <div data-i18n="Analytics">Liste Joueur</div>
                         </a>
                     </li>
-                    <li class="menu-item @yield('calendrier')">
-                        <a href="/calendrier" class="menu-link">
+                    <li class="menu-item @yield('liste')">
+                        <a href="/equipe" class="menu-link">
                             <i class="menu-icon tf-icons bx bx-home-circle"></i>
-                            <div data-i18n="Analytics">Calendrier</div>
+                            <div data-i18n="Analytics">Formation</div>
                         </a>
-                    </li>
-                    <li class="menu-item @yield('resultat')">
-                        <a href="" class="menu-link menu-toggle">
-                            <i class="menu-icon tf-icons bx bx-home-circle"></i>
-                            <div data-i18n="Analytics">Resultat</div>
-                        </a>
-                        <ul class="menu-sub">
-                            <li class="menu-item @yield('collectif')">
-                                <a href="/collectif" class="menu-link">
-                                    <div data-i18n="Without menu">Collectif</div>
-                                </a>
-                            </li>
-                            <li class="menu-item @yield('individuel')">
-                                <a href="/individuel" class="menu-link">
-                                    <div data-i18n="Without menu">Individuel</div>
-                                </a>
-                            </li>
-                            <li class="menu-item @yield('all')">
-                                <a href="/allresultat" class="menu-link">
-                                    <div data-i18n="Without menu">Tout</div>
-                                </a>
-                            </li>
-                        </ul>
                     </li>
                 </ul>
             </aside>
@@ -121,6 +98,7 @@
                     </div>
 
                     <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
+
                         <ul class="navbar-nav flex-row align-items-center ms-auto">
                             <!-- Place this tag where you want the button to render. -->
 
@@ -134,6 +112,7 @@
                                     </div>
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-end">
+
                                     <li>
                                         <a class="dropdown-item" href="#">
                                             <div class="d-flex">
@@ -144,8 +123,8 @@
                                                     </div>
                                                 </div>
                                                 <div class="flex-grow-1">
-                                                    <span class="fw-semibold d-block">JIOI</span>
-                                                    <small class="text-muted">Gestionnaire</small>
+                                                    <span class="fw-semibold d-block">Tournois</span>
+                                                    <small class="text-muted">Technique</small>
                                                 </div>
                                             </div>
                                         </a>
@@ -173,29 +152,7 @@
                             @yield('contenue')
 
                         </div>
-                        <footer class="content-footer footer bg-footer-theme">
-                            <div
-                                class="container-xxl d-flex flex-wrap justify-content-between py-2 flex-md-row flex-column">
-                                <div class="mb-2 mb-md-0">
-                                    ©
-                                    <script>
-                                        document.write(new Date().getFullYear());
-                                    </script>
-                                    , fait par ❤️ par
-                                    <a href="" class="footer-link fw-bolder">Ariniaina</a>
-                                </div>
-                                <div>
-                                    <a href="" class="footer-link me-4">License</a>
-                                    <a href="" class="footer-link me-4">Plus de Themes</a>
 
-                                    <a href=""
-                                        class="footer-link me-4">Documentation</a>
-
-                                    <a href=""
-                                        class="footer-link me-4">Support</a>
-                                </div>
-                            </div>
-                        </footer>
                     </div>
                 </div>
             </div>

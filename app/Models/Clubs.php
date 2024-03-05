@@ -5,15 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Admins extends Model
+class Clubs extends Model
 {
     use HasFactory;
     protected $primaryKey = 'id';
-    protected $table = 'admins';
+    protected $table = 'clubs';
     public $timestamps = false;
     public $fillable =[
-        'username',
-        'pwd'
+        'intitule',
+        'code'
     ];
 
 }
