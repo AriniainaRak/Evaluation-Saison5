@@ -6,6 +6,8 @@ create table admins(
     username varchar(50),
     pwd varchar(50)
 );
+insert into admins (username, pwd) values ('admin', '1234');
+
 create table techniques(
     id serial primary key not null,
     username varchar(50),
@@ -16,8 +18,7 @@ insert into techniques (username, pwd) values ('Arinirina', 'arinirina');
 
 create table postes(
     id serial primary key not null,
-    intitule varchar(50),
-    code varchar(55)
+    intitule varchar(50)
 );
 create table caracteristiques(
     id serial primary key not null,
@@ -31,8 +32,21 @@ create table joueurs(
     taille int,
     idnationalite int references nationalites(id),
     idclub int references clubs(id),
-    
     photo varchar(255)
+);
+
+create table poste_joueur(
+    id serial primary key not null,
+    idjoueur int references joueurs(id),
+    idposte int references postes(id),
+    valeur int  --0 tsisy de 1 misy
+);
+
+create table note_joueurs(
+    id serial primary key not null,
+    idjoueur int references joueurs(id),
+    idcaracteristique int references caracteristiques(id),
+    valeur int
 );
 
 create table nationalites (
@@ -62,11 +76,6 @@ create table coefficients(
     valeur int
 );
 
-create table note_joueurs(
-    id serial primary key not null,
-    idjoueur int references joueurs(id),
-    idcaracteristique int references caracteristiques(id),
-    valeur int
-);
+
 
 create table

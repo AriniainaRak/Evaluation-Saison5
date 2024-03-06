@@ -138,7 +138,7 @@ class MyController extends Controller
     public function nationalite()
     {
 
-        $data=[
+        $data = [
             'nationalite' => Nationalites::all()
         ];
         return view('pages/nationalite', compact('data'));
@@ -147,7 +147,7 @@ class MyController extends Controller
     public function club()
     {
 
-        $data=[
+        $data = [
             'club' => DB::table('clubs')->get()
         ];
         return view('pages/club', compact('data'));
@@ -180,8 +180,8 @@ class MyController extends Controller
     public function coefficient()
     {
         $data = [
-            'coefficient'=> DB::table('coefficients')->get(),
-            'caracteristique'=>Caracteristiques::all(),
+            'coefficient' => DB::table('coefficients')->get(),
+            'caracteristique' => Caracteristiques::all(),
             'poste' => Postes::all()
         ];
         return view('pages.coefficient', compact('data'));
@@ -191,7 +191,7 @@ class MyController extends Controller
     {
         $data = [
             'joueur' => Joueurs::all(),
-            'nationalite'=>Nationalites::all(),
+            'nationalite' => Nationalites::all(),
             'club' => DB::table('clubs')->get()
         ];
         return view('pages.joueur', compact('data'));
@@ -201,7 +201,7 @@ class MyController extends Controller
     {
         $data = [
             'note_joueur' => Note_joueurs::all(),
-            'joueur'=>Joueurs::all(),
+            'joueur' => Joueurs::all(),
             'caracteristique' => Caracteristiques::all()
         ];
         return view('pages.notejoueur', compact('data'));
@@ -314,8 +314,8 @@ class MyController extends Controller
         // Insert the data into the database
         foreach ($data as $row) {
             // Assuming the first column contains the code_club and the second column contains the intitule
-            $code = $row[1];
-            $intitule = $row[0];
+            $code = $row[0];
+            $intitule = $row[1];
 
             // Create a new instance of the Club model
             $club = new Clubs;
@@ -380,58 +380,176 @@ class MyController extends Controller
     }
 
     public function importCoefficients(Request $request)
-{
-    // Valider le fichier d'entrée
-    $request->validate([
-        'csv_file' => 'required|mimes:csv,txt'
-    ]);
-    // Obtenir le fichier téléchargé
-    $file = $request->file('csv_file');
-    $handle = fopen($file->path(), 'r');
-    fgetcsv($handle, 0, ';'); // Sauter la première ligne du fichier CSV
+    {
+        // Valider le fichier d'entrée
+        $request->validate([
+            'csv_file' => 'required|mimes:csv,txt'
+        ]);
+        // Obtenir le fichier téléchargé
+        $file = $request->file('csv_file');
+        $handle = fopen($file->path(), 'r');
+        fgetcsv($handle, 0, ';'); // Sauter la première ligne du fichier CSV
 
-    // Lire les données restantes
-    while (($row = fgetcsv($handle, 0, ';')) !== false) {
-        // echo  "Lecture : ".implode(";",$row)."\n";
-        // Récupérer les données de la ligne
-        $poste = $row[0];
-        // echo $poste;
-        $caracteristique = $row[1];
-        // echo $caracteristique;
-        $coef = $row[2];
-        // echo $coef;
+        // Lire les données restantes
+        while (($row = fgetcsv($handle, 0, ';')) !== false) {
+            // echo  "Lecture : ".implode(";",$row)."\n";
+            // Récupérer les données de la ligne
+            $poste = $row[0];
+            // echo $poste;
+            $caracteristique = $row[1];
+            // echo $caracteristique;
+            $coef = $row[2];
+            // echo $coef;
 
-        // Ajouter des instructions de journalisation
-        // Log::info("Poste : $poste, Caractéristique : $caracteristique, Coef : $coef");
+            // Ajouter des instructions de journalisation
+            // Log::info("Poste : $poste, Caractéristique : $caracteristique, Coef : $coef");
 
-        // Vérifier l'existence des données de référence
-        $posteId = DB::table('postes')->where('intitule', $poste)->value('id');
-        // echo "poste id = ".$posteId;
-        $caracteristiqueId = DB::table('caracteristiques')->where('code', $caracteristique)->value('id');
-        // echo "caracteristique id = ".$caracteristiqueId;
+            // Vérifier l'existence des données de référence
+            $posteId = DB::table('postes')->where('intitule', $poste)->value('id');
+            echo "poste id = " . $posteId;
+            $caracteristiqueId = DB::table('caracteristiques')->where('code', $caracteristique)->value('id');
+            // echo "caracteristique id = ".$caracteristiqueId;
 
-        // Ajouter des instructions de journalisation
-        // Log::info("Poste ID : $posteId, Caractéristique ID : $caracteristiqueId");
+            // Ajouter des instructions de journalisation
+            // Log::info("Poste ID : $posteId, Caractéristique ID : $caracteristiqueId");
 
-        if ($posteId !== null && $caracteristiqueId !== null) {
-            // Insérer les données dans la base de données
-            DB::table('coefficients')->insert([
-                'idcaracteristique' => $caracteristiqueId,
-                'idposte' => $posteId,
-                'valeur' => $coef
-            ]);
-        } else {
-            // Gérer le cas où les données de référence n'existent pas
-            Log::warning("Les données de référence pour la ligne ne sont pas trouvées : Poste = $poste, Caractéristique = $caracteristique");
+            if ($posteId !== null && $caracteristiqueId !== null) {
+                // Insérer les données dans la base de données
+                DB::table('coefficients')->insert([
+                    'idcaracteristique' => $caracteristiqueId,
+                    'idposte' => $posteId,
+                    'valeur' => $coef
+                ]);
+            } else {
+                // Gérer le cas où les données de référence n'existent pas
+                Log::warning("Les données de référence pour la ligne ne sont pas trouvées : Poste = $poste, Caractéristique = $caracteristique");
+            }
         }
+        fclose($handle);
+        return back()->with('csvsuccess', 'Importation réussie.');
     }
-    fclose($handle);
-    return back()->with('csvsuccess', 'Importation réussie.');
-}
 
 
-    public function getnote(){
+    public function importJoueur(Request $request)
+    {
+        // Valider le fichier d'entrée
+        $request->validate([
+            'csv_file' => 'required|mimes:csv,txt'
+        ]);
+        // Obtenir le fichier téléchargé
+        $file = $request->file('csv_file');
+        $handle = fopen($file->path(), 'r');
+        // $headers = fgetcsv($handle, 0, ';');
+        fgetcsv($handle, 0, ';'); // Sauter la première ligne du fichier CSV
+        // echo $headers[0];
+        // Lire les données restantes
+        while (($row = fgetcsv($handle, 0, ';')) !== false) {
+            // echo  "<p>Lecture : ".implode(";",$row)."</p>";
+            // Récupérer les données de la ligne
+            $nom = $row[0];
+            // echo $nom;
+            $prenom = $row[1];
+            // echo $caracteristique;
+            $taille = $row[2];
+            // echo $coef;
+            $nationalite = $row[7];
 
+            $club = $row[8];
+
+            // Vérifier l'existence des données de référence
+            $nationaliteId = DB::table('nationalites')->where('intitule', $nationalite)->value('id');
+            // echo "<p>nationalite id = ".$nationaliteId."</p>";
+            $clubId = DB::table('clubs')->where('code', $club)->value('id');
+            // echo "<p>club id = ".$clubId."</p>";
+
+
+            if ($nationaliteId !== null && $clubId !== null) {
+                // Insérer les données dans la base de données
+                echo "<p>Insertion en cours pour " . $nom." ".$prenom ." ". $taille ."</p>";
+                DB::table('joueurs')->insert([
+                    'nom' => $nom,
+                    'prenom' => $prenom,
+                    'taille' => $taille,
+                    'idnationalite' => $nationaliteId,
+                    'idclub' => $clubId
+                ]);
+                $joueurid = DB::table('joueurs')->where('nom', $nom)->value('id');
+                echo  "<p>Joueur ID = ".$joueurid;
+                // echo $row[12];
+                DB::table('note_joueurs')->insert([
+                    'idjoueur' => $joueurid,
+                    'idcaracteristique' => '1',
+                    'valeur' => $row[9]
+                ]);
+                DB::table('note_joueurs')->insert([
+                    'idjoueur' => $joueurid,
+                    'idcaracteristique' => '2',
+                    'valeur' => $row[10]
+                ]);
+                DB::table('note_joueurs')->insert([
+                    'idjoueur' => $joueurid,
+                    'idcaracteristique' => '3',
+                    'valeur' => $row[11]
+                ]);
+                DB::table('note_joueurs')->insert([
+                    'idjoueur' => $joueurid,
+                    'idcaracteristique' => '4',
+                    'valeur' => $row[12]
+                ]);
+                DB::table('note_joueurs')->insert([
+                    'idjoueur' => $joueurid,
+                    'idcaracteristique' => '5',
+                    'valeur' => $row[13]
+                ]);
+                DB::table('note_joueurs')->insert([
+                    'idjoueur' => $joueurid,
+                    'idcaracteristique' => '6',
+                    'valeur' => $row[14]
+                ]);
+            } else {
+                // Gérer le cas où les données de référence n'existent pas
+                return back()->with('csverror', 'Importation réussie.');
+            }
+            echo $joueurid;
+            if ($row[3] == 1) {
+                echo "<p>Attaquant</p>";
+                DB::table('poste_joueur')->insert([
+                        'idjoueur' => $joueurid,
+                        'idposte' => '1',
+                        'valeur' => $row[3]
+                    ]);
+            }
+            if ($row[4] == 1) {
+                echo "<p>Milieu</p>";
+                DB::table('poste_joueur')->insert([
+                        'idjoueur' => $joueurid,
+                        'idposte' => '2',
+                        'valeur' => $row[4]
+                    ]);
+            }
+            if ($row[5] == 1) {
+                echo "<p>defense</p>";
+                    DB::table('poste_joueur')->insert([
+                            'idjoueur' => $joueurid,
+                            'idposte' => '3',
+                            'valeur' => $row[5]
+                        ]);
+            }
+            if ($row[6] == 1) {
+                echo "<p>gardien</p>";
+                DB::table('poste_joueur')->insert([
+                    'idjoueur' => $joueurid,
+                    'idposte' => '4',
+                    'valeur' => $row[6]
+                ]);
+            }
+        }
+        fclose($handle);
+        return back()->with('csvsuccess', 'Importation réussie.');
     }
+
+    // public function getnote(){
+
+    // }
 
 }

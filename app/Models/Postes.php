@@ -13,7 +13,7 @@ class Postes extends Model
     public $timestamps = false;
     public $fillable =[
         'intitule',
-        'code'
+        // 'code'
     ];
 
 }

@@ -18,8 +18,6 @@
             <form action="/importCoefficients" method="post" enctype="multipart/form-data">
                 @csrf
                 <input type="hidden" name="table" value="coefficients">
-                @csrf
-                <input type="hidden" name="table" value="coefficients">
                 <p><input type="file" name="csv_file" id="data">CSV</p>
                 <p><button type="submit" class="btn btn-dark">Importer</button></p>
                 @if (Session::has('csvsuccess'))

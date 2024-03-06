@@ -37,6 +37,7 @@ Route::get('/liste', [Mycontroller::class,'liste'])->name('liste');
 Route::post('/recherche', [Mycontroller::class,'recherche'])->name('recherche');
 Route::post('/insertJoueur', [Mycontroller::class,'insertJoueur'])->name('insertJoueur');
 Route::post('/importClub', [Mycontroller::class,'importClub'])->name('importClub');
+Route::post('/importJoueur', [Mycontroller::class,'importJoueur'])->name('importJoueur');
 Route::post('/importNationalite', [Mycontroller::class,'importNationalite'])->name('importNationalite');
 Route::post('/importCoefficients', [Mycontroller::class,'importCoefficients'])->name('importCoefficients');
 

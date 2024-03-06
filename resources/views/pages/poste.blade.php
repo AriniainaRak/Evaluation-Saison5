@@ -19,7 +19,7 @@
                 @csrf
                 <input type="hidden" name="table" value="postes">
                 <p>Nom : <input type="text" class="form-control" name="intitule"></p>
-                <p>Code : <input type="text" class="form-control" name="code"></p>
+                {{-- <p>Code : <input type="text" class="form-control" name="code"></p>
                 <p><input type="submit" value="Insert"></p>
             </form>
         </div> --}}
@@ -28,7 +28,7 @@
                 <thead class="table-light">
                     <tr>
                         <th>Nom</th>
-                        <th>Code</th>
+                        {{-- <th>Code</th> --}}
                     </tr>
                 </thead>
                 <tbody class="table-border-bottom-0">
@@ -36,7 +36,7 @@
                         <tr>
                             <td>{{ $poste->intitule }}</td>
                              <td>{{ $poste->code}}</td>
-                            <td><a href="/delete?table=postes&id={{ $poste->id }}">Supprimer</a></td>
+                            {{-- <td><a href="/delete?table=postes&id={{ $poste->id }}">Supprimer</a></td> --}}
                             {{-- <td><a href="/modifposte/{{ $poste->id }}">Modify</a></td> --}}
                         </tr>
                     @endforeach
