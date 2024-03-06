@@ -385,7 +385,6 @@ class MyController extends Controller
     $request->validate([
         'csv_file' => 'required|mimes:csv,txt'
     ]);
-
     // Obtenir le fichier téléchargé
     $file = $request->file('csv_file');
     $handle = fopen($file->path(), 'r');
@@ -393,26 +392,32 @@ class MyController extends Controller
 
     // Lire les données restantes
     while (($row = fgetcsv($handle, 0, ';')) !== false) {
+        // echo  "Lecture : ".implode(";",$row)."\n";
         // Récupérer les données de la ligne
         $poste = $row[0];
+        // echo $poste;
         $caracteristique = $row[1];
+        // echo $caracteristique;
         $coef = $row[2];
+        // echo $coef;
 
         // Ajouter des instructions de journalisation
-        Log::info("Poste : $poste, Caractéristique : $caracteristique, Coef : $coef");
+        // Log::info("Poste : $poste, Caractéristique : $caracteristique, Coef : $coef");
 
         // Vérifier l'existence des données de référence
         $posteId = DB::table('postes')->where('intitule', $poste)->value('id');
-        $caracteristiqueId = DB::table('caracteristiques')->where('intitule', $caracteristique)->value('id');
+        // echo "poste id = ".$posteId;
+        $caracteristiqueId = DB::table('caracteristiques')->where('code', $caracteristique)->value('id');
+        // echo "caracteristique id = ".$caracteristiqueId;
 
         // Ajouter des instructions de journalisation
-        Log::info("Poste ID : $posteId, Caractéristique ID : $caracteristiqueId");
+        // Log::info("Poste ID : $posteId, Caractéristique ID : $caracteristiqueId");
 
         if ($posteId !== null && $caracteristiqueId !== null) {
             // Insérer les données dans la base de données
             DB::table('coefficients')->insert([
-                'idposte' => $posteId,
                 'idcaracteristique' => $caracteristiqueId,
+                'idposte' => $posteId,
                 'valeur' => $coef
             ]);
         } else {
@@ -420,11 +425,13 @@ class MyController extends Controller
             Log::warning("Les données de référence pour la ligne ne sont pas trouvées : Poste = $poste, Caractéristique = $caracteristique");
         }
     }
-
     fclose($handle);
-
     return back()->with('csvsuccess', 'Importation réussie.');
 }
 
+
+    public function getnote(){
+
+    }
 
 }

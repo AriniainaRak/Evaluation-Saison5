@@ -31,6 +31,7 @@ create table joueurs(
     taille int,
     idnationalite int references nationalites(id),
     idclub int references clubs(id),
+    
     photo varchar(255)
 );
 
