@@ -15,14 +15,14 @@
             <div class="alert alert-success">{{ Session::get('success') }}</div>
         @endif
         <div class="table-responsive text-nowrap">
-            <form action="/insert" method="post" enctype="multipart/form-data">
+            <form action="/formation" method="post" enctype="multipart/form-data">
                 @csrf
-                <input type="hidden" name="table" value="formations">
+                {{-- <input type="hidden" name="table" value="formations">
                 <p>Nom : <input type="text" class="form-control" name="nom"></p>
                 <p>Attaquant : <input type="number" class="form-control" name="attaquant"></p>
                 <p>Milieu : <input type="number" class="form-control" name="milieu"></p>
                 <p>Défense : <input type="number" class="form-control" name="defense"></p>
-                <p><input type="submit" value="Insert"></p>
+                <p><input type="submit" value="Insert"></p> --}}
             </form>
         </div>
         <div class="table-responsive text-nowrap">

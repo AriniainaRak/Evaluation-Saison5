@@ -28,25 +28,56 @@
             />
             </div>
         </div>
+
   <!-- /Search -->
         </div>
         <div class="table-responsive text-nowrap">
+            <table class="table">
+                <thead class="table-light">
+                    <h1>Liste des joueurs</h1>
+                            <tr>
+                                <th>Nom</th>
+                                <th>Prénom</th>
+                                <th>Taille</th>
+                                <th>Nationalité</th>
+                                <th>Club</th>
+                                <!-- Ajoutez d'autres en-têtes de colonnes si nécessaire -->
+                            </tr>
+                        </thead>
+                <tbody class="table-border-bottom-0">
+                    @foreach ($joueurs as $joueur)
+                    <tr>
+                        <td>{{ $joueur->nom }}</td>
+                        <td>{{ $joueur->prenom }}</td>
+                        <td>{{ $joueur->taille }}</td>
+                        <td>{{ $joueur->nationalite->intitule }}</td>
+                        <td>{{ $joueur->club->code }}</td>
+                        <td><a href="/fiche?table=joueurs&id={{ $joueur->id }}">Fiche</a></td>
+                        <!-- Ajoutez d'autres colonnes si nécessaire -->
+                    </tr>
+                    @endforeach
+            </table>
         </div>
     </div>
 
-    <div class="card mt-4">
-        <div class="card-header">Résultats de la Recherche</div>
-
+{{--
         <div class="card-body">
             @if ($joueurs->isEmpty())
                 <p>Aucun joueur trouvé.</p>
             @else
                 <ul>
                     @foreach ($joueurs as $player)
-                        <li>{{ $player->nom }} - {{ $player->club->club }} - {{ $player->nationalite->nationalite }}</li>
-                    @endforeach
-                </ul>
-            @endif
+                        <li>{{ $player->nom }}
+                            {{ $player->club->club }}
+                            {{ $player->nationalite->nationalite }}</li>
+                        {{-- <tr>
+                            <td>{{ $player->nom }}</td>
+                            <td>{{ $player->club->club }}</td>
+                            <td>{{ $player->nationalite->nationalite }}</td>
+                        </tr> --}}
+                    {{-- @endforeach
+                </ul> --}}
+            {{-- @endif --}}
         </div>
     </div>
 </div>

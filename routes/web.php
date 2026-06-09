@@ -24,6 +24,8 @@ Route::get('/admis', [MyController::class, 'admin'])->name('admin');
 Route::get('/logout', [MyController::class, 'logout'])->name('logout');
 Route::post('/insert', [MyController::class, 'insert'])->name('insert');
 Route::get('/delete', [MyController::class, 'delete'])->name('delete');
+Route::get('/fiche', [Mycontroller::class,'fiche'])->name('fiche');
+Route::get('/equipe', [Mycontroller::class,'equipe'])->name('equipe');
 Route::get('/update', [MyController::class, 'update'])->name('update');
 Route::get('/nationalite', [Mycontroller::class,'nationalite'])->name('nationalite');
 Route::get('/club', [Mycontroller::class,'club'])->name('club');
@@ -40,4 +42,4 @@ Route::post('/importClub', [Mycontroller::class,'importClub'])->name('importClub
 Route::post('/importJoueur', [Mycontroller::class,'importJoueur'])->name('importJoueur');
 Route::post('/importNationalite', [Mycontroller::class,'importNationalite'])->name('importNationalite');
 Route::post('/importCoefficients', [Mycontroller::class,'importCoefficients'])->name('importCoefficients');
-
+// Route::get('/fiche/{id}', 'MyController@fiche');

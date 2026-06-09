@@ -109,6 +109,25 @@ class MyController extends Controller
         return back()->with('success', 'update effectuer');
     }
 
+    public function fiche(Request $request)
+    {
+        $id = $request['id'];
+        // echo $request ['id'];
+        // echo $data['joueur'];
+        // $joueur = Joueurs::where('id','=',$id)->firstOrFail();
+        $joueur = Joueurs::where('id','=',$id)->get();
+        // echo $joueur->nom;
+        // dd($joueur);
+        if($joueur){
+            $data = [
+                'joueur' =>  $joueur
+            ];
+            return view('pages.fiche')->with('joueur',$joueur);
+        }else{
+            return back();
+        }
+    }
+
     function delete(Request $request)
     {
         $modelName = 'App\Models\\' . $request['table'];
@@ -197,6 +216,16 @@ class MyController extends Controller
         return view('pages.joueur', compact('data'));
     }
 
+    // public function equipe()
+    // {
+    //     $data = [
+    //         'joueur' => Joueurs::all(),
+    //         'formation' => Formations::all(),
+    //         'poste' => Postes::all()
+    //     ];
+    //     return view('pages.formation', compact('data'));
+    // }
+
     public function note_joueur()
     {
         $data = [
@@ -209,15 +238,17 @@ class MyController extends Controller
 
     public function liste()
     {
-        // $data = [
-        //     'joueur'=>Joueurs::all()
-        // ];
         $joueurs = Joueurs::all();
         return view('pages.liste', compact('joueurs'));
     }
 
     public function recherche(Request $request)
     {
+        // $data = [
+        //     'joueur'=>Joueurs::all(),
+        //     'poste'=>Postes::all(),
+        //     'caracteristique'=>Caracteristiques::all()
+        // ];
         // Récupérer les paramètres de recherche depuis la requête
         $nom = $request->input('nom');
         $poste = $request->input('poste');
@@ -245,7 +276,7 @@ class MyController extends Controller
         $joueurs = $query->get();
 
         // Passer les résultats à la vue et afficher
-        return view('pages.lliste', compact('joueurs'));
+        return view('pages.liste', compact('joueurs'));
     }
 
     public function insertJoueur(Request $request)
@@ -264,15 +295,6 @@ class MyController extends Controller
         ];
         Joueurs::create($data);
         return back();
-    }
-
-    public function fiche($id)
-    {
-        // $data = [
-        //     'joueur'=>Joueurs::all()
-        // ];
-        $joueurs = Joueurs::findOrFail($id);
-        return view('pages.fiche', compact('joueurs'));
     }
 
     public function importClub(Request $request)
@@ -474,7 +496,7 @@ class MyController extends Controller
                     'idclub' => $clubId
                 ]);
                 $joueurid = DB::table('joueurs')->where('nom', $nom)->value('id');
-                echo  "<p>Joueur ID = ".$joueurid;
+                // echo  "<p>Joueur ID = ".$joueurid;
                 // echo $row[12];
                 DB::table('note_joueurs')->insert([
                     'idjoueur' => $joueurid,
@@ -512,15 +534,16 @@ class MyController extends Controller
             }
             echo $joueurid;
             if ($row[3] == 1) {
-                echo "<p>Attaquant</p>";
+                // echo "<p>Attaquant</p>";
                 DB::table('poste_joueur')->insert([
-                        'idjoueur' => $joueurid,
+                        'idjoue
+                        ur' => $joueurid,
                         'idposte' => '1',
                         'valeur' => $row[3]
                     ]);
             }
             if ($row[4] == 1) {
-                echo "<p>Milieu</p>";
+                // echo "<p>Milieu</p>";
                 DB::table('poste_joueur')->insert([
                         'idjoueur' => $joueurid,
                         'idposte' => '2',
@@ -528,7 +551,7 @@ class MyController extends Controller
                     ]);
             }
             if ($row[5] == 1) {
-                echo "<p>defense</p>";
+                // echo "<p>defense</p>";
                     DB::table('poste_joueur')->insert([
                             'idjoueur' => $joueurid,
                             'idposte' => '3',
@@ -536,7 +559,7 @@ class MyController extends Controller
                         ]);
             }
             if ($row[6] == 1) {
-                echo "<p>gardien</p>";
+                // echo "<p>gardien</p>";
                 DB::table('poste_joueur')->insert([
                     'idjoueur' => $joueurid,
                     'idposte' => '4',
@@ -548,214 +571,101 @@ class MyController extends Controller
         return back()->with('csvsuccess', 'Importation réussie.');
     }
 
-    // public function getnote(){
 
-    // }
 
-<<<<<<< HEAD
-=======
-    public function typedata()
-    {
-        $data = [
-            'table' => Type_datas::all()
-        ];
-        return view('pages/type', compact('data'));
-    }
+    public function comparerJoueurs($idJoueur1, $idJoueur2) {
+        // Récupérer les données des joueurs à partir de leur identifiant
+        $joueur1 = Joueurs::findOrFail($idJoueur1);
+        $joueur2 = Joueurs::findOrFail($idJoueur2);
 
-    public function data()
-    {
-        $data = [
-            'data' => Table_datas::all(),
-            'type' => Type_datas::all()
-        ];
-        return view('pages.data', compact('data'));
-    }
+        // Comparer les attributs des deux joueurs
+        $comparaison = [];
 
-    public function consommation()
-    {
-        $data = [
-            'data' => Consommations::all()
-        ];
-        return view('pages.consommation', compact('data'));
-    }
+        // Comparaison des attributs communs
+        $attributsCommuns = ['taille', 'physique', 'vitesse', 'passe', 'tir', 'dribble', 'defense'];
 
-    public function import(Request $request)
-    {
-        $file = $request->file('csv_file');
-
-        $handle = fopen($file, 'r');
-        if ($handle !== false) {
-            // ';' séparateur de champ
-            while (($data = fgetcsv($handle, 1000, ';')) !== false) {
-
-                // Ajoutez une vérification pour vous assurer que toutes les colonnes nécessaires sont présentes dans le fichier CSV
-                if (count($data) < 2) {
-                    // Gérer le cas où le nombre de colonnes est insuffisant
-                    return redirect()->back()->with('failed', 'Importation échouée. Le format du fichier CSV est incorrect.');
-                }
-
-                $code = $data[0];
-                $valeur = $data[1];
-
-                // Recherchez le type_data correspondant au code
-                $typeData = DB::table('type_datas')->where('code', $code)->first();
-                if ($typeData !== null) {
-                    // Il y a une correspondance, vous pouvez accéder à $typeData->id en toute sécurité
-                    $data = new Table_datas();
-                    $data->idtype = $typeData->id; // Utilisez le nom correct de la colonne
-                    $data->valeur = $valeur;
-                    $data->save();
-                } else {
-                    // Aucune correspondance trouvée, vous pouvez gérer cela selon vos besoins
-                    // Par exemple, ignorer l'insertion ou effectuer une autre action
-                    // return redirect()->back()->with('failed', 'Importation échouée. Code introuvable : ' . $code);
-                }
-            }
-            fclose($handle);
-        }
-
-        return redirect()->back()->with('success', 'Importation réussie.');
-    }
-
-    public function duree_grp()
-    {
-        $grp3_id = Type_datas::getGrp3();
-        $grp2_id = Type_datas::getGrp2();
-
-        $valeur_grp2 = Table_datas::getValeur($grp2_id);
-        $valeur_grp3 = Table_datas::getValeur($grp3_id);
-
-        $duree = $valeur_grp2 / $valeur_grp3;
-        return $duree;
-    }
-
-    public function puissance_tranche()
-    {
-        $table_data = new Table_datas();
-        $sol1 = $table_data->getPuissanceMax_panneau();
-
-        $taux_data = $table_data->getValeurTaux_panneau();
-
-        $puissance_tranche = [];
-
-        foreach ($taux_data as $taux) {
-            $puissance_tranche[] = $taux != 0 ? $sol1 / $taux : 0;
-        }
-        return $puissance_tranche;
-    }
-
-    public function getProduction()
-    {
-
-        $heure = [8, 9, 10, 11, 12, 13, 14, 15, 16, 17];
-        $grp3_id = Type_datas::getGrp3();
-        $grp2_id = Type_datas::getGrp2();
-        $grp1_id = Type_datas::getGrp1();
-
-        $valeur_grp2 = Table_datas::getValeur($grp2_id);
-        $valeur_grp3 = Table_datas::getValeur($grp3_id);
-        $valeur_grp1 = Table_datas::getValeur($grp1_id);
-        $duree = 1;
-
-        $data = new Table_datas();
-        $sol1 = $data->getPuissanceMax_panneau();
-        $sol2 = $data->getTauxSol2();
-        $sol3 = $data->getTauxSol3();
-        $sol4 = $data->getTauxSol4();
-
-        $tranche1 = ($sol1 * $sol2) / 100;
-        $tranche2 = ($sol1 * $sol3) / 100;
-        $tranche3 = ($sol1 * $sol4) / 100;
-
-        $jirama_id = Type_datas::getJirama();
-        $jirama = Table_datas::getValeur($jirama_id);
-
-        $ret = [];
-        for ($i = 0; $i < 10; $i++) {
-            if ($i < 4) {
-                $ret[$i] = $tranche1 + ($duree * $valeur_grp1) + $jirama;
-                $reste_duree = $duree - 1;
-            } else if ($i < 6) {
-                $ret[$i] = $tranche2 + ($duree * $valeur_grp1) + $jirama;
-                $duree = $duree - 1;
+        foreach ($attributsCommuns as $attribut) {
+            $diff = $joueur1->$attribut - $joueur2->$attribut;
+            if ($diff > 0) {
+                $resultat = $joueur1->nom . ' a une meilleure ' . $attribut . ' que ' . $joueur2->nom . ' de ' . $diff;
+            } elseif ($diff < 0) {
+                $resultat = $joueur2->nom . ' a une meilleure ' . $attribut . ' que ' . $joueur1->nom . ' de ' . abs($diff);
             } else {
-                $ret[$i] = $tranche3 + ($duree * $valeur_grp1) + $jirama;
-                $duree = $duree - 1;
+                $resultat = $joueur1->nom . ' et ' . $joueur2->nom . ' ont la même ' . $attribut;
             }
-
-            $reste_duree--;
-
-            if ($duree < 1) {
-                $reste_duree = $duree;
-                $duree = 0;
-            }
+            $comparaison[$attribut] = $resultat;
         }
-        return view('pages.production', ['ret' => $ret, 'heure' => $heure]);
+
+        // Renvoyer les résultats à la vue
+        return view('comparaison', compact('joueur1', 'joueur2', 'comparaison'));
     }
 
-    public function getConsommation(Request $request)
-    {
-        $heure = [8, 9, 10, 11, 12, 13, 14, 15, 16, 17];
-        $taux = 100;
-        $id = $request['id'];
-        $conso = Consommations::where('id', '=', $id)->first();
-        $taux_creuse = (float)$conso->taux_pers_h_creuse;
-        $nbPers = (float)$conso->nb_pers;
-        $consoFix = (float)$conso->consommation_fix;
-        $puissMoy = (float)$conso->puissance_moy;
-        $tauxEleve = $taux;
-        $Consommation = [];
-        $ConsommationFix = 0;
-        $ConsommationEleve = 0;
-        for ($i = 0; $i < count($heure); $i++) {
-            if ($heure[$i] > 11 && $heure[$i] < 15) {
-                $tauxEleve = $taux_creuse;
-                $Consommation[$i] = ((($nbPers * $tauxEleve) / 100) * $puissMoy) + $consoFix;
-            } else {
-                $tauxEleve = $taux;
-                $Consommation[$i] = ((($nbPers * $tauxEleve) / 100) * $puissMoy) + $consoFix;
-            }
-        }
-        $data = [
-            'conso' => $Consommation,
-            'heure' => $heure,
-            'prod' => $this->getProduction()
-        ];
-        return view('pages.conso', compact('data'));
+    public function formerEquipe() {
+        // Récupérer tous les joueurs disponibles
+        $joueurs = Joueurs::all();
+
+        // Appliquer les critères de formation pour former l'équipe
+        $equipe = [];
+
+        // Par exemple, former une équipe avec un gardien, des défenseurs, des milieux et des attaquants
+        $gardien = Joueurs::where('poste', 'gardien')->orderBy('competence')->first();
+        $defenseurs = Joueurs::where('poste', 'defenseur')->orderBy('competence')->take(4)->get();
+        $milieux = Joueurs::where('poste', 'milieu')->orderBy('competence')->take(4)->get();
+        $attaquants = Joueurs::where('poste', 'attaquant')->orderBy('competence')->take(2)->get();
+
+        // Ajouter les joueurs à l'équipe
+        $equipe[] = $gardien;
+        $equipe = array_merge($equipe, $defenseurs->toArray());
+        $equipe = array_merge($equipe, $milieux->toArray());
+        $equipe = array_merge($equipe, $attaquants->toArray());
+
+        // Retourner la vue avec l'équipe formée
+        return view('equipe', compact('equipe'));
     }
-    public function getProductionDelestage(Request $request)
-    {
-        $heure = [8, 9, 10, 11, 12, 13, 14, 15, 16, 17];
-        $taux = 100;
-        $id = $request['id'];
-        $conso = Consommations::where('id', '=', $id)->first();
-        $delestage = Delestage::all();
-        $taux_creuse = (float)$conso->taux_pers_h_creuse;
-        $nbPers = (float)$conso->nb_pers;
-        $consoFix = (float)$conso->consommation_fix;
-        $puissMoy = (float)$conso->puissance_moy;
-        $tauxEleve = $taux;
-        $Consommation = [];
-        $ConsommationFix = 0;
-        $ConsommationEleve = 0;
-        for ($i = 0; $i < count($heure); $i++) {
-            if (Delestage[$i]->heure == heure[$i]) {
-                $i + 1;
-            }
-            if ($heure[$i] > 11 && $heure[$i] < 15) {
-                $tauxEleve = $taux_creuse;
-                $Consommation[$i] = ((($nbPers * $tauxEleve) / 100) * $puissMoy) + $consoFix;
-            } else {
-                $tauxEleve = $taux;
-                $Consommation[$i] = ((($nbPers * $tauxEleve) / 100) * $puissMoy) + $consoFix;
-            }
+
+    public function equipe(
+    ) {
+        // Récupérer tous les joueurs disponibles
+        $joueurs = Joueurs::all();
+
+        // Initialiser un tableau pour stocker les joueurs de l'équipe
+        $equipe = [];
+
+        // Analyser la formation pour déterminer le nombre de joueurs requis pour chaque position
+        $positions = explode('-', $formation);
+
+        // Vérifier si la formation est valide (ex. 4-4-2, 4-3-3)
+        if (count($positions) != 3) {
+            // Formation invalide, rediriger avec un message d'erreur
+            return back()->with('error', 'Formation invalide.');
         }
-        $data = [
-            'conso' => $Consommation,
-            'heure' => $heure,
-            'prod' => $this->getProduction()
-        ];
-        return view('pages.conso', compact('data'));
+
+        // Sélectionner les joueurs pour chaque position en fonction de la formation
+        foreach ($positions as $position) {
+            switch ($position) {
+                case '4':
+                    $joueursPourPosition = $joueurs->where('poste', 'defenseur')->take(4);
+                    break;
+                case '3':
+                    $joueursPourPosition = $joueurs->where('poste', 'milieu')->take(3);
+                    break;
+                case '2':
+                    $joueursPourPosition = $joueurs->where('poste', 'attaquant')->take(2);
+                    break;
+                default:
+                    // Formation invalide, rediriger avec un message d'erreur
+                    return back()->with('error', 'Formation invalide.');
+            }
+
+            // Ajouter les joueurs sélectionnés à l'équipe
+            $equipe = array_merge($equipe, $joueursPourPosition->toArray());
+        }
+
+        // Retourner la vue avec l'équipe formée
+        return view('equipe', compact('equipe'));
     }
->>>>>>> 024f70dc1832b08e625fa195e3d7973c0f78e9f4
+
+
+
+
 }
